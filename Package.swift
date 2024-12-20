@@ -17,7 +17,7 @@ let package = Package(
             targets: ["Toast"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/voyager-software/NVActivityIndicatorView", from: "5.2.3")
+        .package(url: "https://www.github.com/voyager-software/NVActivityIndicatorView", from: "5.2.3")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
