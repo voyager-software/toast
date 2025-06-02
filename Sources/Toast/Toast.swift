@@ -13,8 +13,6 @@ public final class Toast: UIView {
     init(parentView: UIView, text: String, imageName: String, withActivity: Bool = false) {
         super.init(frame: .zero)
         self.removeExistingToasts(from: parentView)
-        self.imageView.tintColor = self.tintColor
-        self.spinner.color = self.tintColor
         self.label.text = text
         self.setup(parentView, imageName: imageName, withActivity: withActivity)
     }
@@ -34,6 +32,11 @@ public final class Toast: UIView {
             indefinite = 1000
     }
 
+    public static var iconTint: UIColor = .label
+    public static var textColor: UIColor = .label
+    public static var font: UIFont = .preferredFont(forTextStyle: .callout)
+    public static var insets: UIEdgeInsets = .init(top: 20, left: 20, bottom: 16, right: 16)
+
     public var text: String? {
         get { self.label.text }
         set { self.label.text = newValue }
@@ -44,7 +47,20 @@ public final class Toast: UIView {
         set { self.spinner.isHidden = !newValue }
     }
 
+    override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        if traitCollection.horizontalSizeClass != previousTraitCollection?.horizontalSizeClass ||
+            traitCollection.verticalSizeClass != previousTraitCollection?.verticalSizeClass
+        {
+            self.updateConstraintsForCurrentSizeClass()
+        }
+    }
+
     // MARK: Internal
+
+    var compactConstraints: [NSLayoutConstraint] = []
+    var regularConstraints: [NSLayoutConstraint] = []
 
     func show() -> Self {
         self.shownAt = Date()
@@ -71,14 +87,11 @@ public final class Toast: UIView {
 
     // MARK: Private
 
-    private static let font: UIFont = .preferredFont(forTextStyle: .callout)
     private static let spinnerSize: CGFloat = 20
 
     private let animationTime: TimeInterval = 0.4
-    private let insets: UIEdgeInsets = .init(top: 20, left: 20, bottom: 16, right: 16)
     private let topMargin: CGFloat = 16
     private let offScreenPosition: CGFloat = -160
-    private let widthMultiplier: CGFloat = UIDevice.current.userInterfaceIdiom == .phone ? 0.9 : 0.6
 
     private var topConstraint: NSLayoutConstraint!
     private var shownAt: Date = .init()
@@ -107,10 +120,10 @@ public final class Toast: UIView {
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.tintColor = .label
-        imageView.contentMode = .scaleAspectFill
+        imageView.tintColor = Toast.iconTint
+        imageView.contentMode = .scaleAspectFit
         NSLayoutConstraint.activate([
-            imageView.widthAnchor.constraint(equalToConstant: 32),
+            imageView.widthAnchor.constraint(equalToConstant: 28),
             imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor),
         ])
         return imageView
@@ -121,7 +134,7 @@ public final class Toast: UIView {
         lbl.translatesAutoresizingMaskIntoConstraints = false
         lbl.font = Toast.font
         lbl.numberOfLines = 0
-        lbl.textColor = .label
+        lbl.textColor = Toast.textColor
         return lbl
     }()
 
@@ -130,6 +143,7 @@ public final class Toast: UIView {
         let ai = NVActivityIndicatorView(frame: frame, type: .circleStrokeSpin, color: .label, padding: 0)
         ai.translatesAutoresizingMaskIntoConstraints = false
         ai.isHidden = true
+        ai.color = Toast.iconTint
 
         NSLayoutConstraint.activate([
             ai.widthAnchor.constraint(equalToConstant: spinnerSize),
@@ -172,9 +186,18 @@ public final class Toast: UIView {
             self.spinner.startAnimating()
         }
 
+        self.compactConstraints = [
+            self.widthAnchor.constraint(equalTo: parentView.widthAnchor, multiplier: 0.9),
+        ]
+
+        self.regularConstraints = [
+            self.widthAnchor.constraint(equalTo: parentView.widthAnchor, multiplier: 0.6),
+        ]
+
+        self.updateConstraintsForCurrentSizeClass()
+
         NSLayoutConstraint.activate([
             self.centerXAnchor.constraint(equalTo: parentView.centerXAnchor),
-            self.widthAnchor.constraint(equalTo: parentView.widthAnchor, multiplier: self.widthMultiplier),
 
             self.contentView.leftAnchor.constraint(equalTo: self.leftAnchor),
             self.contentView.rightAnchor.constraint(equalTo: self.rightAnchor),
@@ -186,10 +209,10 @@ public final class Toast: UIView {
             self.effectView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
             self.effectView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
 
-            self.stackView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: self.insets.left),
-            self.stackView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -self.insets.right),
-            self.stackView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: self.insets.top),
-            self.stackView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -self.insets.bottom),
+            self.stackView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: Self.insets.left),
+            self.stackView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -Self.insets.right),
+            self.stackView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: Self.insets.top),
+            self.stackView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -Self.insets.bottom),
         ])
 
         self.alpha = 0
@@ -202,6 +225,17 @@ public final class Toast: UIView {
         parentView.layoutIfNeeded()
 
         self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.tapHandler)))
+    }
+
+    private func updateConstraintsForCurrentSizeClass() {
+        NSLayoutConstraint.deactivate(self.compactConstraints + self.regularConstraints)
+
+        if traitCollection.horizontalSizeClass == .compact {
+            NSLayoutConstraint.activate(self.compactConstraints)
+        }
+        else {
+            NSLayoutConstraint.activate(self.regularConstraints)
+        }
     }
 
     private func removeExistingToasts(from parentView: UIView) {
