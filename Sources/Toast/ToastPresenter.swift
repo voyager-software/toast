@@ -158,7 +158,7 @@ public extension Toast {
 
 public extension Toast {
     @discardableResult
-    func present(
+    static func present(
         _ message: String,
         imageName: String = "info.circle",
         color: UIColor? = nil,
