@@ -156,25 +156,25 @@ public extension Toast {
     }
 }
 
-public extension UIViewController {
+public extension Toast {
     @discardableResult
-    func showToast(
+    func present(
         _ message: String,
         imageName: String = "info.circle",
         color: UIColor? = nil,
         withSpinner: Bool = false,
         duration: Toast.Duration = .short,
         position: Toast.Position = .top,
-        in view: UIView? = UIApplication.shared.keyWindow
+        in view: UIView? = UIApplication.shared.appWindow
     ) -> Toast? {
-        guard let parentView = view ?? self.view else { return nil }
+        guard let view else { return nil }
 
         let toast = Toast(
             text: message,
             imageName: imageName,
             color: color,
             withSpinner: withSpinner
-        ).show(in: parentView, position: position)
+        ).show(in: view, position: position)
 
         if duration != .indefinite {
             toast.hide(after: duration.rawValue)

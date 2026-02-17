@@ -1,20 +1,19 @@
 import UIKit
 
-extension UIApplication {
-    var appScene: UIWindowScene? {
+public extension UIApplication {
+    var windowScene: UIWindowScene? {
         self.connectedScenes
-            .filter { $0.activationState == .foregroundActive || $0.activationState == .foregroundInactive }
             .compactMap { $0 as? UIWindowScene }
-            .first
+            .first { $0.session.role == .windowApplication }
     }
-    
+
     var appWindow: UIWindow? {
-        self.appScene?.windows.first { $0.isKeyWindow }
+        self.windowScene?.keyWindow
     }
-    
+
     #if os(iOS)
     var interfaceOrientation: UIInterfaceOrientation {
-        self.appScene?.interfaceOrientation ?? .unknown
+        self.windowScene?.interfaceOrientation ?? .unknown
     }
     #endif
 }
