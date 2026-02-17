@@ -18,7 +18,7 @@ let package = Package(
             targets: ["Toast"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/voyager-software/NVActivityIndicatorView", from: "6.0.0")
+        .package(url: "https://github.com/voyager-software/NVActivityIndicatorView", from: "6.1.0")
     ],
     targets: [
         .target(

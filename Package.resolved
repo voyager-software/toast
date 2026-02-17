@@ -1,13 +1,13 @@
 {
-  "originHash" : "e618d1f5aa4b358731d5bd3d15f8973b873fee274695fa0debc44fd94fb22a56",
+  "originHash" : "31b8a0c45e28a02d9cfec0b66abc11f89675efa502cdd0fce683bb04840af616",
   "pins" : [
     {
       "identity" : "nvactivityindicatorview",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/voyager-software/NVActivityIndicatorView",
       "state" : {
-        "revision" : "4f87c8d88b4a44e166782925aa81757052522238",
-        "version" : "6.0.0"
+        "revision" : "2fc88ee6c4e4f026f1fda38f628cff86eac4d1c6",
+        "version" : "6.1.0"
       }
     }
   ],

@@ -25,6 +25,7 @@ public extension Toast {
     private static let offScreenPosition: CGFloat = 160
     private static let topMargin: CGFloat = 16
     private static let bottomMargin: CGFloat = 16
+    private static let maxWidth: CGFloat = 500
 
     private var positionConstraint: NSLayoutConstraint? {
         self.superview?.constraints.first {
@@ -77,7 +78,7 @@ public extension Toast {
                 return width
             }(),
             {
-                let maxWidth = self.widthAnchor.constraint(lessThanOrEqualToConstant: 500)
+                let maxWidth = self.widthAnchor.constraint(lessThanOrEqualToConstant: Self.maxWidth)
                 maxWidth.priority = .required
                 return maxWidth
             }(),
