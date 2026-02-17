@@ -1,6 +1,6 @@
 import UIKit
 
-public extension UIApplication {
+extension UIApplication {
     var windowScene: UIWindowScene? {
         self.connectedScenes
             .compactMap { $0 as? UIWindowScene }

@@ -166,9 +166,9 @@ public extension Toast {
         withSpinner: Bool = false,
         duration: Toast.Duration = .short,
         position: Toast.Position = .top,
-        in view: UIView? = UIApplication.shared.appWindow
+        in view: UIView? = nil
     ) -> Toast? {
-        guard let view else { return nil }
+        guard let view = view ?? UIApplication.shared.appWindow else { return nil }
 
         let toast = Toast(
             text: message,
