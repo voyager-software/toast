@@ -84,7 +84,7 @@ public final class Toast: UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         if #available(iOS 26, tvOS 26, *) {
-            view.layer.cornerRadius = 20
+            view.layer.cornerRadius = 23
         }
         else {
             view.layer.cornerRadius = 12
