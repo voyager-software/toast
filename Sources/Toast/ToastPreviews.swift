@@ -5,7 +5,7 @@
 //  Created by Gabor Sajo on 2026-02-18.
 //
 
-#if DEBUG
+#if DEBUG && os(iOS)
 import SwiftUI
 import UIKit
 
