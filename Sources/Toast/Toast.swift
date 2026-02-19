@@ -81,9 +81,19 @@ public final class Toast: UIView {
     private static let spinnerSize: CGFloat = 20
 
     private let contentView: UIView = {
-        let container = UIView()
-        container.translatesAutoresizingMaskIntoConstraints = false
-        return container
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        if #available(iOS 26, tvOS 26, *) {
+            view.layer.cornerRadius = 20
+        }
+        else {
+            view.layer.cornerRadius = 12
+        }
+        view.layer.cornerCurve = .continuous
+        view.layer.borderColor = UIColor.systemGray.withAlphaComponent(0.33).cgColor
+        view.layer.borderWidth = 1.0
+        view.layer.masksToBounds = true
+        return view
     }()
 
     private let effectView: UIVisualEffectView = {
@@ -148,14 +158,6 @@ public final class Toast: UIView {
         self.layer.shadowOffset = .zero
         self.layer.shadowOpacity = 0.25
         self.layer.shadowRadius = 20
-
-        if #available(iOS 26, tvOS 26, *) {
-            self.contentView.layer.cornerRadius = 20
-        }
-        else {
-            self.contentView.layer.cornerRadius = 12
-        }
-        self.contentView.layer.masksToBounds = true
 
         self.addSubview(self.contentView)
         self.contentView.addSubview(self.effectView)
