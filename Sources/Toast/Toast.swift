@@ -90,7 +90,7 @@ public final class Toast: UIView {
             view.layer.cornerRadius = 12
         }
         view.layer.cornerCurve = .continuous
-        view.layer.borderColor = UIColor.systemGray.withAlphaComponent(0.33).cgColor
+        view.layer.borderColor = UIColor.systemGray.withAlphaComponent(0.25).cgColor
         view.layer.borderWidth = 1.0
         view.layer.masksToBounds = true
         return view
